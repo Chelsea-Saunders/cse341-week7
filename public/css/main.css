@@ -1,0 +1,18 @@
+body { 
+    font-family: 'Roboto', Arial;
+}
+a {
+    color: rgb(215, 250, 253);
+
+    &:visited {
+        color: rgb(232, 221, 254);
+    }
+}
+p {
+    margin: 10px 0 !important;
+}
+.login-container {
+    width: 400px;
+    margin-top: 50px;
+    text-align: center;
+}
