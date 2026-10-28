@@ -1,31 +1,41 @@
 const express = require('express');
 const router = express.Router();
+const  { ensureAuth, ensureGuest } = require('../middleware/auth');
+
+const Story = require('../models/Story');
 
 router.use('/', require('./swagger'));
 router.use('/contacts', require('./contacts'));
 
-// home page
-router.get('/', (req, res) => {
-    console.log('GET /home page git');
-    res.render('home');
-});
-
 // login page
-router.get('/login', (req, res) => {
-    console.log('GET /login hit');
+router.get('/', ensureGuest, (req, res) => {
+    console.log('GET Home/login hit');
     res.render('login', {
         layout: 'login',
+        title: 'Login'
     });
 });
 
-// dashboard
-router.get('/dashboard', (req, res) => {
-    console.log('GET /dashboard hit');
-    res.render('dashboard')
+router.get('/login', (req, res) => {
+    res.redirect('/');
 });
 
-// mounting the other routers
-router.use('/', require('./swagger'));
-router.use('/contacts', require('./contacts'));
+// dashboard
+router.get('/dashboard', ensureAuth, async (req, res) => {
+    try {
+        const stories = await Story.find({ user: req.user.id }).lean();
+        res.render('dashboard', {
+            title: 'Dashboard',
+            name: req.user.firstName, 
+            user: req.user,
+        stories
+    });
+    } catch (err) {
+        console.error(err);
+        res.render('error/500');
+    }
+});
+
+
 
 module.exports = router;

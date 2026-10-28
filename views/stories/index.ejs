@@ -1,0 +1,33 @@
+<%- include('../partials/header', { title: 'Public Stories' }) %>
+
+<h1>Stories</h1>
+<div class="row">
+    <% if (stories && stories.length > 0) { %>
+        <% stories.forEach(story => { %>
+            <div class="col s12 m4">
+                <div class="card">
+                    <div class="card-image">
+                        <%- editIcon(story.user, user, story._id) %>
+                    </div>
+                    <div class="card-content center-align">
+                        <h5><%= story.title %></h5>
+                         <p><%= truncate(stripTags(story.body), 150) %></p>
+                         <br>
+                         <div class="chip">
+                            <img src="<%= story.user.image %>" alt="">
+                            <a href="/stories/user/<%= story.user._id %>"><%= story.user.displayName %></a>
+                         </div>
+                    </div>
+                    <div class="card-action center-align">
+                        <!-- clicking "read more" takes you to she show.ejs via GET /stories/:id -->
+                         <a href="/stories/<%= story._id %>" class="btn gray">Read More</a>
+                    </div>
+                </div>
+            </div>
+        <% }) %>
+    <% } else { %>
+    <p>No stories to display</p>
+     <% } %>
+</div>
+
+<%- include('../partials/footer', { currentYear: new Date().getFullYear() }) %>
